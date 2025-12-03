@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description"
+          content="JavisGPT: A Unified Multi-modal LLM for Sounding-Video Comprehension and Generation">
+    <meta name="keywords" content="audiovisual understanding, audiovisual generation, multimodal large language models, diffusion, unified mllm">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>JavisGPT</title> 
+
+    <script>
+        window.dataLayer = window.dataLayer || [];
+
+        function gtag() {
+            dataLayer.push(arguments);
+        }
+
+        gtag('js', new Date());
+
+        gtag('config', 'G-PYVRSFMDRL');
+    </script>
+
+    <link href="https://fonts.googleapis.com/css?family=Google+Sans|Noto+Sans|Castoro"
+          rel="stylesheet">
+    <link rel="icon" href="./assets/image/logo.png">
+    <link rel="stylesheet" href="./assets/css/bulma.min.css">
+    <link rel="stylesheet" href="./assets/css/bulma-carousel.min.css">
+    <link rel="stylesheet" href="./assets/css/bulma-slider.min.css">
+    <link rel="stylesheet" href="./assets/css/fontawesome.all.min.css">
+    <link rel="stylesheet"
+          href="https://cdn.jsdelivr.net/gh/jpswalsh/academicons@1/css/academicons.min.css">
+    <link rel="stylesheet" href="./assets/css/index.css">
+
+    <link rel="stylesheet" href="./assets/css/index-gradio.css">
+    <link rel="stylesheet" href="./assets/css/live_theme.css">
+
+    <!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script defer src="./static/js/fontawesome.all.min.js"></script>
+    <script src="./static/js/bulma-carousel.min.js"></script>
+    <script src="./static/js/bulma-slider.min.js"></script> -->
+    <!-- <script src="./static/js/index.js"></script> -->
+</head>
+<body>
+
+
+<section class="hero">
+    <div class="hero-body">
+        <div class="container is-max-desktop">
+            <div class="columns is-centered">
+                <div class="column has-text-centered">
+                    <!-- Title -->
+                    <h1 class="title is-1 publication-title" style="display: flex;flex-direction: row;align-items: center;justify-content: center;margin-bottom: 5px;">
+                        <img src="./assets/image/logo.png" width="80" height="60" style="margin-right: 10px;">JavisGPT:
+                    </h1>
+                    <h2 class="title publication-title">A Unified Multi-modal LLM for <br> Sounding-Video Comprehension and Generation</h2>
+
+                    <!-- Authors -->
+                    <div class="is-size-5 publication-authors">   
+                        <span class="author-block"><a href="https://kail8.github.io/">Kai Liu</a><sup>1,2*</sup>,</span>
+                        <span class="author-block"><a href="#">Jungang Li</a><sup>3*</sup>,</span>
+                        <span class="author-block"><a href="#">Yuchong Sun</a><sup>4*</sup>,</span>
+                        <span class="author-block"><a href="https://sqwu.top/">Shengqiong Wu</a><sup>2</sup>,</span>
+                        <span class="author-block"><a href="#">Jianzhang Gao</a><sup>4</sup>,</span>
+                        <br>
+                        <span class="author-block"><a href="https://dwan.ch/">Daoan Zhang</a><sup>5</sup>,</span>
+                        <span class="author-block"><a href="https://zwstart.github.io/">Wei Zhang</a><sup>6</sup>,</span>
+                        <span class="author-block"><a href="https://adrianwestmoon.github.io/">Sheng Jin</a><sup>7</sup>,</span>
+                        <span class="author-block"><a href="#">Sicheng Yu</a><sup>8</sup>,</span>
+                        <span class="author-block"><a href="#">Geng Zhan</a><sup>9</sup>,</span>
+                        <span class="author-block"><a href="#">Jiayi Ji</a><sup>2</sup>,</span>
+                        <br>
+                        <span class="author-block"><a href="#">Fan Zhou</a><sup>1</sup>,</span>
+                        <span class="author-block"><a href="https://zheng-lab-anu.github.io/">Liang Zheng</a><sup>10</sup>,</span>
+                        <span class="author-block"><a href="https://yanshuicheng.info/">Shuicheng Yan</a><sup>2</sup>,</span>
+                        <span class="author-block"><a href="https://haofei.vip/">Hao Fei</a><sup>2†</sup>,</span>
+                        <span class="author-block"><a href="https://www.chuatatseng.com/">Tat-Seng Chua</a><sup>2</sup>,</span>
+                    </div>
+
+                    <div class="is-size-5 publication-authors" style="margin-top: 10px;">
+                        <span class="author-block" style="font-size: 18px;"><sup>1</sup>ZJU,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>2</sup>NUS,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>3</sup>HKUST(GZ),</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>4</sup>RUC,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>5</sup>UR,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>6</sup>HZCU,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>7</sup>NTU,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>8</sup>SMU,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>9</sup>USYD,</span>
+                        <span class="author-block" style="font-size: 18px;"><sup>10</sup>ANU</span>
+                    </div>
+
+                    <div class="is-size-5 publication-authors">
+                        <span class="author-block" style="font-size: 15px;">Published as a <a href="https://neurips.cc/virtual/2025/loc/san-diego/poster/118457">spotlight</a> paper at NeurIPS (<sup>*</sup>Equal Contribution, <sup>†</sup>Correspondence)</span>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+<section class="section">
+    <div class="container is-max-desktop">
+        <div class="columns is-centered has-text-centered">
+            <div class="column is-full-width">
+                <p style="font-size: 22px;">
+                    <b>JavisGPT</b> has been moved to <span><a href="https://JavisVerse.github.io/JavisGPT-page">this URL</a></span> 
+                    under the <a href="https://JavisVerse.github.io/">JavisVerse</a> project. Click to see the updates!
+                </p>
+                <br>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+<section class="section" id="BibTeX">
+    <div class="container is-max-desktop content">
+        <h2 class="title">BibTeX</h2>
+<pre><code>@inproceedings{liu2025javisgpt,
+    title={JavisGPT: A Unified Multi-modal LLM for Sounding-Video Comprehension and Generation},
+    author={Kai Liu and Jungang Li and Yuchong Sun and Shengqiong Wu and jianzhang gao and Daoan Zhang and Wei Zhang and Sheng Jin and Sicheng Yu and Geng Zhan and Jiayi Ji and Fan Zhou and Liang Zheng and Shuicheng YAN and Hao Fei and Tat-Seng Chua},
+    booktitle={The Thirty-ninth Annual Conference on Neural Information Processing Systems},
+    year={2025},
+}</code></pre>
+    </div>
+</section>
+
+
+<footer class="footer">
+    <div class="container">
+        <div class="columns is-centered">
+            <div class="column is-8">
+                <div class="content">
+                    <p style="text-align: center;">
+                        The webpage is built based on <a href="https://github.com/nerfies/nerfies.github.io">Nerfies</a>.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</footer>
+
+</body>
+</html>
