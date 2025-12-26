@@ -1,0 +1,51 @@
+accelerate==1.9.0
+apex==0.9.10dev
+audioflux==0.1.9
+av==13.1.0
+beautifulsoup4==4.14.2
+bitsandbytes==0.46.1
+colossalai==0.5.0
+dashscope==1.24.7
+decord==0.6.0
+deepspeed==0.16.4
+diffusers==0.29.0
+easydict==1.13
+einops==0.8.1
+# flash_attn==2.7.4.post1
+ftfy==6.3.1
+huggingface_hub==0.34.4
+imageio==2.37.0
+iopath==0.1.10
+jsonlines==4.0.0
+librosa==0.11.0
+matplotlib==3.10.7
+mmengine==0.10.7
+numpy<=2.0
+openai==2.6.0
+opencv_python==4.12.0.88
+opencv_python_headless==4.11.0.86
+packaging==25.0
+pandarallel==1.6.5
+pandas==2.3.3
+peft==0.13.2
+Pillow==12.0.0
+# pipelines==0.0.14
+pytorchvideo==0.1.5
+PyYAML==6.0.3
+qwen_omni_utils==0.0.8
+regex==2025.7.34
+Requests==2.32.5
+rotary_embedding_torch==0.5.3
+safetensors==0.6.2
+scipy==1.15.3
+scikit-image
+soundfile==0.13.1
+timm==0.9.10
+torch==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+torchaudio==2.5.1 --index-url https://download.pytorch.org/whl/cu121
+torchvision==0.20.1 --index-url https://download.pytorch.org/whl/cu121
+tqdm==4.67.1
+transformers==4.49.0
+# vllm==0.7.3
+xformers==0.0.28.post3 --index-url https://download.pytorch.org/whl/cu121
+xfuser==0.4.4

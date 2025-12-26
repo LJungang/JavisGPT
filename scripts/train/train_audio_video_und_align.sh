@@ -1,0 +1,81 @@
+export TOKENIZERS_PARALLELISM=false
+
+USER_ROOT=${USER_ROOT:-$(dirname $(dirname "$PWD"))}  # ../../
+
+PROJ_ROOT=${PROJ_ROOT:-"${USER_ROOT}/projects/JavisGPT"}
+DATA_ROOT=${DATA_ROOT:-"${USER_ROOT}/datasets/JavisGPT"}
+WEIGHT_ROOT=${WEIGHT_ROOT:-"${USER_ROOT}/weights"}
+
+GPUS=${GPUS:-"0,1,2,3,4,5,6,7"}
+
+VIDEO_FOLDER="${DATA_ROOT}/train/AV-FineTune/video"
+AUDIO_FOLDER="${DATA_ROOT}/train/AV-FineTune/video"
+
+DATASET_PATH="${DATA_ROOT}/train/AV-FineTune/stage2_av_ft_und.json"
+
+NUM_FRAMES=16
+FRAME_WIDTH=588  # 448(4:3) or 588(16:9)
+FRAME_HEIGHT=336
+AVSYNC_MODE="merge"  # merge, concat, interleave, qformer, bica
+
+NUM_EPOCHS=3
+BATCH_SIZE=4
+NUM_WORKERS=8
+LEARNING_RATE=1e-4
+LORA_ENABLE=False
+
+RUN_NAME="javisgpt_stage2_av_finetune_avund_align"
+echo "RUN_NAME: ${RUN_NAME}"
+
+OUTPUT_DIR="${PROJ_ROOT}/runs/${RUN_NAME}"
+LOG_DIR="${OUTPUT_DIR}/log"
+mkdir -p ${LOG_DIR}
+
+export BASE_ARCH="Qwen2_5_VL"
+CKPT_PATH="${WEIGHT_ROOT}/pretrained/mllm/Qwen2.5-VL-7B-Instruct"
+MODEL_MAX_LENGTH=131072
+AUDIO_PROJ_PATH="${PROJ_ROOT}/runs/javisgpt_stage1_mm_pretrain_audio_align/audio_proj.bin"
+BEATS_PATH="${WEIGHT_ROOT}/pretrained/mllm/BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt"
+
+
+deepspeed --include="localhost:${GPUS}" --master_port 29610 \
+    javisgpt/train/train_audio_video.py \
+    --lora_enable ${LORA_ENABLE} --lora_r 128 --lora_alpha 256 \
+    --deepspeed scripts/zero2.json \
+    --model_name_or_path ${CKPT_PATH} \
+    --beats_path ${BEATS_PATH} \
+    --audio_projector_path ${AUDIO_PROJ_PATH} \
+    --data_path ${DATASET_PATH} \
+    --audio_folder ${AUDIO_FOLDER} \
+    --video_folder ${VIDEO_FOLDER} \
+    --avsync_mode ${AVSYNC_MODE} \
+    --frames_upbound ${NUM_FRAMES} \
+    --frame_width ${FRAME_WIDTH} \
+    --frame_height ${FRAME_HEIGHT} \
+    --training_stage "audio_video_align" \
+    --force_sample True \
+    --bf16 True \
+    --fp16 False \
+    --run_name $RUN_NAME \
+    --output_dir ${OUTPUT_DIR} \
+    --num_train_epochs ${NUM_EPOCHS} \
+    --per_device_train_batch_size ${BATCH_SIZE} \
+    --per_device_eval_batch_size 4 \
+    --gradient_accumulation_steps 8 \
+    --eval_strategy "no" \
+    --save_strategy "steps" \
+    --save_steps 5000 \
+    --save_total_limit 5 \
+    --learning_rate ${LEARNING_RATE} \
+    --weight_decay 0. \
+    --warmup_ratio 0.03 \
+    --lr_scheduler_type "cosine" \
+    --logging_steps 1 \
+    --tf32 True \
+    --model_max_length ${MODEL_MAX_LENGTH} \
+    --gradient_checkpointing True \
+    --dataloader_num_workers ${NUM_WORKERS} \
+    --report_to tensorboard \
+    --torch_compile True \
+    --torch_compile_backend "inductor" \
+    --dataloader_drop_last True >${LOG_DIR}/${RUN_NAME}_output.txt 2>${LOG_DIR}/${RUN_NAME}_error.txt &

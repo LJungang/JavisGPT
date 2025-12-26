@@ -1,0 +1,102 @@
+[tool.black]
+line-length = 240
+
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "javisgpt"
+version = "0.0.1"
+description = "JavisGPT: A Unified LLM for Sounding-Video Comprehension and Generation"
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+]
+
+[project.optional-dependencies]
+standalone = [
+    "shortuuid",
+    "httpx==0.24.0",
+    "einops",
+    "ftfy",
+]
+
+
+train = [
+    "javisgpt[standalone]",
+    "numpy==1.26.1",
+    "open_clip_torch",
+    "fastapi",
+    "markdown2[all]",
+    "requests",
+    "sentencepiece",
+    "torch==2.5.1",
+    "torchvision==0.20.1",
+    "torchaudio==2.5.1",
+    "uvicorn",
+    "wandb",
+    "deepspeed==0.16.4",
+    "peft==0.13.2",
+    "accelerate==1.9.0",
+    "transformers==4.49.0",
+    "bitsandbytes==0.46.1",
+    "scikit-learn==1.2.2",
+    "sentencepiece~=0.1.99",
+    "einops==0.8.1",
+    "einops-exts",
+    "gradio_client==0.2.9",
+    "urllib3<=2.0.0",
+    "datasets==2.16.1",
+    # "pydantic==1.10.8",
+    "timm",
+    "hf_transfer",
+    "opencv-python",
+    "av",
+    "decord",
+    "tyro",
+    "scipy",
+    "librosa",
+    "tensorboardX",
+]
+
+[project.urls]
+"Homepage" = "https://javisverse.github.io/JavisGPT-page/"
+"Bug Tracker" = "https://github.com/JavisVerse/JavisGPT/issues"
+
+[tool.setuptools.packages.find]
+include = ["javisgpt*", "trl*", "interface*"]
+exclude = [
+    "assets*",
+    "benchmark*",
+    "docs",
+    "dist*",
+    "playground*",
+    "scripts*",
+    "tests*",
+    "checkpoints*",
+    "project_checkpoints*",
+    "debug_checkpoints*",
+    "mlx_configs*",
+    "wandb*",
+    "notebooks*",
+]
+
+[tool.wheel]
+exclude = [
+    "assets*",
+    "benchmark*",
+    "docs",
+    "dist*",
+    "playground*",
+    "scripts*",
+    "tests*",
+    "checkpoints*",
+    "project_checkpoints*",
+    "debug_checkpoints*",
+    "mlx_configs*",
+    "wandb*",
+    "notebooks*",
+]
