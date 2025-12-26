@@ -72,7 +72,7 @@ We assume the data structure as:
 /path/to/user/root
 |-- projects
 |   |   |-- JavisDiT  # downstream JAV-DiT
-|   |   `-- JavisGPT  # workspace of this project
+|   |   └-- JavisGPT  # workspace of this project
 |-- weights
 |   |-- pretrained
 |   |   |-- dit   # pretrained weights for JavisDiT
@@ -82,19 +82,19 @@ We assume the data structure as:
 |   |   |   |-- imagebind_huge.pth
 |   |   |-- mllm  # pretrained weights for JavisGPT
 |   |   |   |-- BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt
-|   |   |   `-- Qwen2.5-VL-7B-Instruct
+|   |   |   └-- Qwen2.5-VL-7B-Instruct
 |   |-- JavisVerse
 |   |   |-- JavisDiT-v0.1-prior
 |   |   |-- JavisDiT-v0.1-jav-240p4s
-|   |   `-- JavisGPT-v0.1-7B-Instruct
+|   |   └-- JavisGPT-v0.1-7B-Instruct
 |-- datasets
 |   |-- JavisGPT
 |   |   |-- train
 |   |   |   |-- MM-PreTrain
 |   |   |   |-- AV-FineTune
-|   |   |   `-- JavisInst-Omni
+|   |   |   └-- JavisInst-Omni
 |   |   |-- eval
-|   |   |   `-- JavisUnd-Eval
+|   |   |   └-- JavisUnd-Eval
 ```
 
 #### 1. Prepare pretrained weights
