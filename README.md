@@ -3,8 +3,10 @@
 <div align="center">
 
 [[`HomePage`](https://javisverse.github.io/JavisGPT-page/)] 
-[[`Paper`](https://openreview.net/forum?id=MZoOpD9NHV)] 
+[[`HF Paper`](https://huggingface.co/papers/2512.22905)] 
+[[`ArXiv Paper`](https://arxiv.org/abs/2512.22905)] 
 [[`Model`](https://huggingface.co/collections/JavisVerse/javisgpt)] 
+[[`Dataset`](https://huggingface.co/collections/JavisVerse/javisgpt)] 
 
 </div>
 
@@ -20,10 +22,11 @@ We also curate the **`JavisInst-Omni`** dataset to facilitate instruction-tuning
 
 ## 📰 News
 
-- **[2025.12.26]** 🔥 We release the code of [JavisGPT](#), with the preview [JavisGPT-v0.1-7B-Instruct](https://huggingface.co/JavisVerse/JavisGPT-v0.1-7B-Instruct) checkpoint at huggingface. Feel free to play with it!
+- **[2026.1.1]** 🚀 We release the full training and evaluation scripts to support future research in the community. Have fun with them!
+- **[2025.12.30]** 🚀 We release the training dataset of [JavisInst-Omni](https://huggingface.co/datasets/JavisVerse/JavisInst-Omni) to support multimodal instruction tuning on sounding video comprehension and generation tasks, as well as [MM-PreTrain](https://huggingface.co/datasets/JavisVerse/MM-PreTrain) and [AV-FineTune](https://huggingface.co/datasets/JavisVerse/AV-FineTune) datasets to enable preliminary multimodal alignment for LLMs. The [JavisUnd-Eval](https://huggingface.co/datasets/JavisVerse/JavisUnd-Eval) dataset is also released to set a standard for audio-video understanding evaluation for MLLMs.
+- **[2025.12.26]** 🔥 We release the code of [JavisGPT](https://arxiv.org/abs/2512.22905), with the preview [JavisGPT-v0.1-7B-Instruct](https://huggingface.co/JavisVerse/JavisGPT-v0.1-7B-Instruct) checkpoint at huggingface. Feel free to play with it!
 
 ### 👉 TODO 
-- [ ] Release the training/evaluation dataset and scripts.
 - [ ] Derive a more powerful JavisGPT model.
 
 
@@ -57,13 +60,6 @@ cd ../JavisGPT
 # ln -s ../JavisDiT/javisdit javisdit
 ```
 
-<!-- Install the evaluation package:
-```bash
-conda install -c conda-forge openjdk=8
-bash javisgpt/eval/caption_evaluation_tools/coco_caption/get_stanford_models.sh
-pip install vllm==0.7.3
-``` -->
-
 ### Inference
 
 We assume the data structure as:
@@ -94,10 +90,11 @@ We assume the data structure as:
 |   |   |   |-- AV-FineTune
 |   |   |   └-- JavisInst-Omni
 |   |   |-- eval
-|   |   |   └-- JavisUnd-Eval
+|   |   |   |-- JavisUnd-Eval
+|   |   |   └-- JavisBench
 ```
 
-#### 1. Prepare pretrained weights
+#### 1. Prepare Pretrained Weights
 
 First, download [BEATs_iter3_plus_AS2M_finetuned_on_AS2M_cpt2.pt](https://github.com/microsoft/unilm/tree/master/beats) from [here](https://1drv.ms/u/s!AqeByhGUtINrgcpj8ujXH1YUtxooEg?e=E9Ncea) and [Qwen2.5-VL-7B-Instruct](https://huggingface.co/Qwen/Qwen2.5-VL-7B-Instruct), and put (or link) them into `../../weights/pretrained/mllm`.
 
@@ -121,7 +118,7 @@ huggingface-cli download JavisVerse/JavisDiT-v0.1-prior --local-dir ../../weight
 huggingface-cli download JavisVerse/JavisDiT-v0.1-jav-240p4s --local-dir ../../weights/JavisVerse/JavisDiT-v0.1-jav-240p4s
 ```
 
-#### 2. Run target inference
+#### 2. Run Target Inference
 
 - **Standalone Audio/Visual Comprehension**
 
@@ -175,11 +172,186 @@ The generated sample will be saved at `${SAVE_PREFIX}.mp4`, e.g., `./results/avg
 
 ### Training
 
-- [ ] Coming soon.
+
+#### 1. Prepare Training Datasets
+
+Download the corresponding [MM-PreTrain](https://huggingface.co/datasets/JavisVerse/MM-PreTrain), [AV-FineTune](https://huggingface.co/datasets/JavisVerse/AV-FineTune), and [JavisInst-Omni](https://huggingface.co/datasets/JavisVerse/JavisInst-Omni) from [HuggingFace](https://huggingface.co/collections/JavisVerse/javisgpt), and put (or link) them into `../../datasets/JavisGPT/train/` coordinately.
+
+```bash
+huggingface-cli download --repo-type dataset JavisVerse/MM-PreTrain --local-dir ../../datasets/JavisGPT/train/MM-PreTrain
+huggingface-cli download --repo-type dataset JavisVerse/AV-FineTune --local-dir ../../datasets/JavisGPT/train/AV-FineTune
+huggingface-cli download --repo-type dataset JavisVerse/JavisInst-Omni --local-dir ../../datasets/JavisGPT/train/JavisInst-Omni
+```
+
+Then, go to the downloaded datasets and run the `unzip.py` to extract source audio/video data:
+
+```bash
+cd ../../datasets/JavisGPT/train/MM-PreTrain # MM-PreTrain/AV-FineTune/JavisInst-Omni
+python unzip.py --purge
+```
+
+However, we cannot release the source data of [TAVGBench](https://arxiv.org/abs/2404.14381) due to policy issues. Instead, the video_ids (formatted with `{youtube_id}_{start_time}_{end_time}`) are provided in [`video_ids.txt`](video_ids.txt) at [AV-FineTune](https://huggingface.co/datasets/JavisVerse/AV-FineTune) and [JavisInst-Omni](https://huggingface.co/datasets/JavisVerse/JavisInst-Omni), and users can refer to [TAVGBench](https://github.com/OpenNLPLab/TAVGBench) to download raw videos.
+
+
+#### 2. Conduct Progressive Training Procedure
+
+- **Stage-I Multi-Modal Pre-Training**
+
+This stage aims to enquip the backbone Qwen2.5-VL-Instruct model with preliminary audio comprehension and audio-video generation capabilities, includes two distinct tasks: (1) _audio comprehension pretraining_ and (2) _audio–video generation pretraining_. We adopt separate training for data efficiency, since the two tasks do not share gradient interactions during optimization.
+
+For audio comprehension pretraining, run the following command, and the trained `audio_proj.bin` will be saved at `./runs/javisgpt_stage1_mm_pretrain_audio_align/`:
+
+```bash
+bash ./scripts/train/train_audio_align.sh
+```
+
+For audio-video generation pretraining, run the following command, and the trained `avgen_proj.bin` will be saved at `./runs/javisgpt_stage1_mm_pretrain_avgen_align/`:
+
+```bash
+bash ./scripts/train/train_audio_video_gen_align.sh
+```
+
+- **Stage-II Audio-Visual Fine-Tuning**
+
+This stage aims to enhance the understanding and generation of sounding videos, which can be integrated into a single task. Run the following command, and the trained `mm_proj_all.bin` with LoRA weights will be saved at `./runs/javisgpt_stage2_av_finetune/`:
+
+```bash
+bash ./scripts/train/stage2_av_ft.sh
+```
+
+- **Stage-III Multi-Modal Insturction-Tuning**
+
+This stage aims to elicit the multimodal instruction-following ability for audio/video/audio-video comprehension and joint audio-video generation tasks.
+Run the following command, and the trained `mm_proj_all.bin` with LoRA weights will be saved at `./runs/javisgpt_stage3_mm_insttune/`:
+
+```bash
+bash ./scripts/train/stage3_mm_it.sh
+```
+
+Only the checkpoints trained in this stage are utilized to build the final JavisGPT model.
 
 ### Evaluation
 
-- [ ] Coming soon.
+#### 1. Prepare Evaluation Datasets
+
+- **Audio/Video/Audio-Video Comprehension**
+
+Download and extract the preprocessed [JavisUnd-Eval](https://huggingface.co/datasets/JavisVerse/JavisUnd-Eval) dataset (including 8 widely-used subsets) to `../../datasets/JavisGPT/eval/`:
+
+```bash
+huggingface-cli download --repo-type dataset JavisVerse/JavisUnd-Eval --local-dir ../../datasets/JavisGPT/eval/JavisUnd-Eval
+
+cd ../../datasets/JavisGPT/eval/JavisUnd-Eval
+python unzip.py --purge
+cd -
+```
+
+- **Joint Audio-Video Generation**
+
+Download the [JavisBench](https://huggingface.co/datasets/JavisVerse/JavisBench) dataset to `../../datasets/JavisGPT/eval/`:
+
+```bash
+huggingface-cli download --repo-type dataset JavisVerse/JavisUnd-Eval --local-dir ../../datasets/JavisGPT/eval/JavisBench
+```
+
+#### 2. Run Target Inference
+
+- **Audio/Video/Audio-Video Comprehension**
+
+Run the following script to automatically collect the responses from audio (`ClothoAQA`, `TUT2017`), video (`ActivityNet`, `Perception`, `MVBench`), and audio-video (`AVQA`, `MusicAVQA`, `AVSD`) datasets:
+
+```bash
+bash ./scripts/eval/infer_av_und.sh
+```
+
+Model's responses will be saved at `./results/av_und/`.
+
+- **Joint Audio-Video Generation**
+
+Run the following script to automatically collect the joint audio-video generation results from `JavisBench-mini`:
+
+```bash
+bash ./scripts/eval/infer_av_gen.sh
+```
+
+Model's responses will be saved at `./results/av_gen/`.
+
+
+#### 3. Run Target Evaluation
+
+
+- **Audio/Video/Audio-Video Comprehension**
+
+If you use local models as the LLM judge, such as [Qwen series](https://huggingface.co/collections/Qwen/qwen25), install the `vllm` dependency and run the following commands:
+
+```bash
+pip install vllm==0.7.3
+
+export CUDA_VISIBLE_DEVICES="0,1,2,3,4,5,6,7"
+export VLLM_WORKER_MULTIPROC_METHOD="spawn"
+
+judge_model_name_or_path="Qwen/Qwen2.5-72B-Instruct"
+res_dir="./results/av_und/"
+
+python javisgpt/eval/eval_und.py \
+    --res_dir "${res_dir}" \
+    --judge_model_name_or_path "${judge_model_name_or_path}"
+```
+
+Otherwise, if you use OpenAI API as the LLM judge, run:
+
+```bash
+api_key="YOU_API_KEY"
+judge_model_name_or_path="OpenAI/gpt-4o-mini"
+res_dir="./results/av_und/"
+
+python javisgpt/eval/eval_und.py \
+    --res_dir "${res_dir}" \
+    --judge_model_name_or_path "${judge_model_name_or_path}" \
+    --api_key "${api_key}"
+```
+
+The evaluation results will be saved at `${api_key}/eval_res.json`, e.g., `./results/av_und/eval_res.json`
+
+- **Joint Audio-Video Generation**
+
+We reuse the scripts proposed in [JavisDiT](https://github.com/JavisVerse/JavisDiT.git) to evaluate the quality, consistency, and synchrony of generated sounding videos:
+
+```bash
+cd ../JavisDiT
+
+INFER_DATA_DIR="../JavisGPT/results/av_gen"
+EVAL_DATA_ROOT="../../datasets/JavisGPT/eval/JavisBench"
+RESULTS_DIR="./evaluation_results/JavisGPT"
+
+MAX_FRAMES=16
+IMAGE_SIZE=224
+MAX_AUDIO_LEN_S=4.0
+
+# Params to calculate JavisScore
+WINDOW_SIZE_S=2.0
+WINDOW_OVERLAP_S=1.5
+
+METRICS="all" 
+
+DATASET="JavisBench-mini"
+INPUT_FILE="${EVAL_DATA_ROOT}/${DATASET}.csv"
+FVD_AVCACHE_PATH="${EVAL_DATA_ROOT}/cache/fvd_fad/${DATASET}-vanilla-max4s.pt"
+
+python -m eval.javisbench.main \
+  --input_file "${INPUT_FILE}" \
+  --infer_data_dir "${INFER_DATA_DIR}" \
+  --output_file "${RESULTS_DIR}/${DATASET}.json" \
+  --max_frames ${MAX_FRAMES} \
+  --image_size ${IMAGE_SIZE} \
+  --max_audio_len_s ${MAX_AUDIO_LEN_S} \
+  --window_size_s ${WINDOW_SIZE_S} \
+  --window_overlap_s ${WINDOW_OVERLAP_S} \
+  --fvd_avcache_path ${FVD_AVCACHE_PATH} \
+  --metrics ${METRICS}
+```
+
+The evaluation results will be saved at `${JavisDiT_ROOT}/evaluation_results/JavisGPT/JavisBench-mini.json`.
 
 ## Citation
 
