@@ -60,6 +60,7 @@ def run_inference(args):
         for qid, qus, ans, res, meta in zip(question_ids, questions, answers, output_texts, metas):
             res_item = {'question_id': qid, 'question': qus, 'response': res, 'answer': ans, 'meta': meta}
             ans_file.write(json.dumps(res_item) + "\n")
+        ans_file.flush()
             
     ans_file.close()
 

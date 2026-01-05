@@ -265,6 +265,7 @@ class AVSDDataset(AVQADataset):
         question_id = sample['id']
         conversations = sample['conversations']  # <audio_video> already in
 
+        n_turn = len(conversations) // 2
         question_id = [f'video_{question_id}_{idx}_round{i}' for i in range(n_turn)]
         question_raw = [conv['value'] for conv in conversations[0::2]]
         QUESTION_TMPL = 'Answer the following questions based on this sounding video.'
@@ -288,7 +289,6 @@ class AVSDDataset(AVQADataset):
 
         merge_size = self.data_args.image_processor.merge_size
 
-        n_turn = len(conversations) // 2
         input_ids_list = []
         for i in range(n_turn):
             convs = deepcopy(conversations[:(i+1)*2])

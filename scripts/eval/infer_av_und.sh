@@ -23,7 +23,7 @@ BEATS_PATH="${WEIGHT_ROOT}/pretrained/mllm/BEATs_iter3_plus_AS2M_finetuned_on_AS
 MODEL_PATH=${MODEL_PATH:-"${PROJ_ROOT}/runs/javisgpt_stage3_mm_insttune"}
 ALL_PROJ_PATH="${MODEL_PATH}/mm_proj_all.bin"
 
-gpu_list="${CUDA_VISIBLE_DEVICES:-1}"
+gpu_list="${CUDA_VISIBLE_DEVICES:-0}"
 IFS=',' read -ra GPULIST <<< "$gpu_list"
 
 # divide data via the number of GPUs per task
