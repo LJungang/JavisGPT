@@ -55,10 +55,10 @@ def calc_oe_accuracy(predicts: List[str], answers: List[str], model, **kwargs):
                 "Correct Answer: {answer}\n"
                 "Predicted Answer: {pred}\n\n"
                 "Provide your evaluation only as a yes/no and score where the score is an integer value between 0 and 5, with 5 indicating the highest meaningful match. "
-                "Please generate the response in the form of a Python dictionary string with keys 'pred' and 'score', where value of 'pred' is  a string of 'yes' or 'no' and value of 'score' is in INTEGER, not STRING."
+                "Please generate the response in the form of a Python dictionary string with keys 'pred' and 'score', where value of 'pred' is a string of 'yes' or 'no' and value of 'score' is in INTEGER, not STRING."
                 "DO NOT PROVIDE ANY OTHER OUTPUT TEXT OR EXPLANATION. Only provide the Python dictionary string. "
                 "For example, your response should look like this: "
-                "{'pred': 'yes', 'score': 4.8}."
+                "{{'pred': 'yes', 'score': 4.8}}."
         }
     ]
     if isinstance(model, str):  # online API
@@ -124,15 +124,6 @@ def calc_oe_accuracy(predicts: List[str], answers: List[str], model, **kwargs):
         acc_list.append(correct)
 
     return np.mean(acc_list)
-
-
-def calc_cap_accuracy(predicts: List[str], answers: List[str], **kwargs):
-    import sys; sys.path.append(osp.dirname(osp.abspath(__file__)))
-    from caption_evaluation_tools.eval_metrics import evaluate_metrics_from_lists
-    predicts = [pred.strip().lower() for pred in predicts]
-    answers = [[ans] for ans in answers]
-    metrics, _ = evaluate_metrics_from_lists(predicts, answers, verbose=False)
-    return metrics['SPIDEr']
 
 
 def build_judge_llm(jugde_model_name_or_path, api_key=""):
